@@ -1,0 +1,2467 @@
+{
+ "ref_pilihan": {
+  "desc": "Daftar kode untuk semua kolom pilihan (enum). Label dipakai di UI/laporan.",
+  "grp": "Referensi",
+  "cols": [
+   {
+    "name": "kategori",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nama kategori (= nama kolom/enum).",
+    "label": "Kategori"
+   },
+   {
+    "name": "kode",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Kode yang disimpan di tabel data.",
+    "label": "Kode"
+   },
+   {
+    "name": "label",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Label tampilan.",
+    "label": "Label"
+   },
+   {
+    "name": "urutan",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Urutan tampil.",
+    "label": "Urutan"
+   }
+  ],
+  "label": "Kode Pilihan"
+ },
+ "ref_ppm_area": {
+  "desc": "8 program utama PPM menurut Kepmen ESDM 1824 K/30/MEM/2018 dan padanannya di Program Mapping.",
+  "grp": "Referensi",
+  "cols": [
+   {
+    "name": "ppm_area_kode",
+    "typ": "smallint",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nomor program area PPM (1–8).",
+    "label": "Area PPM"
+   },
+   {
+    "name": "nama_kepmen",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nomenklatur Kepmen.",
+    "label": "Nama kepmen"
+   },
+   {
+    "name": "nama_mapping",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nomenklatur Program Mapping Social Impact.",
+    "label": "Nama mapping"
+   },
+   {
+    "name": "dasar_hukum",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Dasar hukum"
+   }
+  ],
+  "label": "Area PPM"
+ },
+ "ref_program": {
+  "desc": "Program Mapping Social Impact: pilar → bidang PPM → program → sub-program.",
+  "grp": "Referensi",
+  "cols": [
+   {
+    "name": "program_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Kode program [PILAR]-[BIDANG]-[urut]. XX-99 = penampung belum terpetakan.",
+    "label": "ID program"
+   },
+   {
+    "name": "pilar_kode",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "pilar_kode",
+    "desc": "HCD / EE / ST / CP (lintas pilar) / EPP.",
+    "label": "Pilar kode"
+   },
+   {
+    "name": "pilar",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nama pilar.",
+    "label": "Pilar"
+   },
+   {
+    "name": "bidang_ppm",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Program Area PPM (nomenklatur Program Mapping).",
+    "label": "Bidang ppm"
+   },
+   {
+    "name": "ppm_area_kode",
+    "typ": "smallint",
+    "pk": false,
+    "fk": "ref_ppm_area.ppm_area_kode",
+    "req": false,
+    "enum": null,
+    "desc": "Nomor area PPM Kepmen 1824; kosong untuk program di luar PPM (EPP) dan penampung.",
+    "label": "Area PPM"
+   },
+   {
+    "name": "program",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nama program.",
+    "label": "Program"
+   },
+   {
+    "name": "sub_program",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Sub-program; kosong bila tidak ada.",
+    "label": "Sub program"
+   },
+   {
+    "name": "sdgs",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "SDGs terkait.",
+    "label": "SDGs"
+   },
+   {
+    "name": "aktif",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "FALSE untuk kode penampung.",
+    "label": "Aktif"
+   }
+  ],
+  "label": "Program"
+ },
+ "ref_wilayah": {
+  "desc": "Hierarki wilayah kabupaten → kecamatan → desa, termasuk Ring.",
+  "grp": "Referensi",
+  "cols": [
+   {
+    "name": "wilayah_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "KAB-xx / KEC-xxx / DES-xxxx.",
+    "label": "ID wilayah"
+   },
+   {
+    "name": "level",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "level_wilayah",
+    "desc": "kabupaten/kecamatan/desa.",
+    "label": "Level"
+   },
+   {
+    "name": "nama",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nama wilayah.",
+    "label": "Nama"
+   },
+   {
+    "name": "parent_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_wilayah.wilayah_id",
+    "req": false,
+    "enum": null,
+    "desc": "Wilayah induk.",
+    "label": "Parent id"
+   },
+   {
+    "name": "provinsi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Provinsi.",
+    "label": "Provinsi"
+   },
+   {
+    "name": "kabupaten",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nama kabupaten (denormalisasi untuk filter).",
+    "label": "Kabupaten"
+   },
+   {
+    "name": "kecamatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nama kecamatan.",
+    "label": "Kecamatan"
+   },
+   {
+    "name": "ring",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "ring",
+    "desc": "Ring wilayah (asumsi awal, lihat dasar_ring).",
+    "label": "Ring"
+   },
+   {
+    "name": "kode_kemendagri",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Kode wilayah Kemendagri — WAJIB dilengkapi sebelum produksi.",
+    "label": "Kode Kemendagri"
+   },
+   {
+    "name": "terverifikasi",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "TRUE bila nama & kode wilayah sudah dicek.",
+    "label": "Terverifikasi"
+   },
+   {
+    "name": "dasar_ring",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Dasar penentuan ring.",
+    "label": "Dasar ring"
+   }
+  ],
+  "label": "Wilayah"
+ },
+ "asumsi_penghasilan": {
+  "desc": "Upah asumsi per pendidikan untuk imputasi baseline penghasilan.",
+  "grp": "Referensi",
+  "cols": [
+   {
+    "name": "pendidikan",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": "pendidikan",
+    "desc": "Kode pendidikan.",
+    "label": "Pendidikan"
+   },
+   {
+    "name": "upah_bulanan_asumsi",
+    "typ": "numeric(14,2)",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Rupiah per bulan.",
+    "label": "Upah bulanan asumsi (Rp)"
+   },
+   {
+    "name": "periode_acuan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Periode data acuan.",
+    "label": "Periode acuan"
+   },
+   {
+    "name": "sumber",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Sumber angka.",
+    "label": "Sumber"
+   }
+  ],
+  "label": "Asumsi Penghasilan"
+ },
+ "mitra": {
+  "desc": "Mitra pelaksana program.",
+  "grp": "Master",
+  "cols": [
+   {
+    "name": "mitra_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "ID mitra.",
+    "label": "ID mitra"
+   },
+   {
+    "name": "nama_mitra",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nama mitra (sudah diseragamkan).",
+    "label": "Nama mitra"
+   },
+   {
+    "name": "jenis_mitra",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Mis. NGO, perusahaan, sekolah, pemerintah.",
+    "label": "Jenis mitra"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Mitra"
+ },
+ "mitra_kontak": {
+  "desc": "Narahubung mitra.",
+  "grp": "Master",
+  "cols": [
+   {
+    "name": "kontak_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "ID kontak.",
+    "label": "ID kontak mitra"
+   },
+   {
+    "name": "mitra_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "mitra.mitra_id",
+    "req": true,
+    "enum": null,
+    "desc": "Mitra.",
+    "label": "Mitra"
+   },
+   {
+    "name": "nama_kontak",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nama kontak"
+   },
+   {
+    "name": "posisi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Posisi"
+   },
+   {
+    "name": "whatsapp",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nomor diseragamkan (08…).",
+    "label": "Whatsapp"
+   },
+   {
+    "name": "email",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Email"
+   }
+  ],
+  "label": "Kontak Mitra"
+ },
+ "konversi_program_lama": {
+  "desc": "Jejak konversi nama program lama (mitra) → Program Mapping.",
+  "grp": "Master",
+  "cols": [
+   {
+    "name": "konversi_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "ID konversi.",
+    "label": "ID konversi program"
+   },
+   {
+    "name": "mitra_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "mitra.mitra_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Mitra"
+   },
+   {
+    "name": "nama_mitra_lama",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nama mitra persis seperti data lama.",
+    "label": "Nama mitra lama"
+   },
+   {
+    "name": "nama_program_lama",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Nama program persis seperti data lama.",
+    "label": "Nama program lama"
+   },
+   {
+    "name": "program_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_program.program_id",
+    "req": true,
+    "enum": null,
+    "desc": "Hasil pemetaan.",
+    "label": "Program"
+   },
+   {
+    "name": "status_mapping",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "status_mapping",
+    "desc": "sesuai / perlu_verifikasi / belum_terpetakan.",
+    "label": "Status mapping"
+   },
+   {
+    "name": "alasan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Dasar/keraguan pemetaan.",
+    "label": "Alasan"
+   }
+  ],
+  "label": "Konversi Program"
+ },
+ "rumah_tangga": {
+  "desc": "Rumah tangga (Kartu Keluarga). Satu KK valid = satu baris, dipakai bersama oleh peserta sekeluarga.",
+  "grp": "Inti",
+  "cols": [
+   {
+    "name": "rumah_tangga_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "ID rumah tangga.",
+    "label": "ID rumah tangga"
+   },
+   {
+    "name": "no_kk",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nomor KK (teks 16 digit).",
+    "label": "No. KK"
+   },
+   {
+    "name": "status_no_kk",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "status_nik",
+    "desc": "Hasil validasi format No. KK.",
+    "label": "Status no kk"
+   },
+   {
+    "name": "nama_ayah",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nama ayah"
+   },
+   {
+    "name": "nama_ibu",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nama ibu"
+   },
+   {
+    "name": "nama_wali",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nama wali"
+   }
+  ],
+  "label": "Rumah Tangga"
+ },
+ "peserta": {
+  "desc": "Satu baris = satu orang (unik lintas pilar & program).",
+  "grp": "Inti",
+  "cols": [
+   {
+    "name": "peserta_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "ID peserta unik.",
+    "label": "ID peserta"
+   },
+   {
+    "name": "nik",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "NIK 16 digit. Unik bila status_nik = valid. Enkripsi/akses terbatas di produksi.",
+    "label": "NIK"
+   },
+   {
+    "name": "status_nik",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "status_nik",
+    "desc": "Hasil validasi format NIK.",
+    "label": "Status NIK"
+   },
+   {
+    "name": "nama",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nama sesuai KTP.",
+    "label": "Nama"
+   },
+   {
+    "name": "tanggal_lahir",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal lahir"
+   },
+   {
+    "name": "jenis_kelamin",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "jenis_kelamin",
+    "desc": "",
+    "label": "Jenis kelamin"
+   },
+   {
+    "name": "status_pernikahan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_pernikahan",
+    "desc": "",
+    "label": "Status pernikahan"
+   },
+   {
+    "name": "wilayah_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_wilayah.wilayah_id",
+    "req": false,
+    "enum": null,
+    "desc": "Wilayah sesuai KTP, level paling rinci yang tersedia.",
+    "label": "Wilayah"
+   },
+   {
+    "name": "alamat_domisili",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Alamat tinggal saat ini.",
+    "label": "Alamat domisili"
+   },
+   {
+    "name": "rumah_tangga_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "rumah_tangga.rumah_tangga_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Rumah tangga"
+   },
+   {
+    "name": "telepon",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Diseragamkan 08…",
+    "label": "Telepon"
+   },
+   {
+    "name": "email",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Lowercase, format divalidasi.",
+    "label": "Email"
+   },
+   {
+    "name": "instagram",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Instagram"
+   },
+   {
+    "name": "facebook",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Facebook"
+   },
+   {
+    "name": "linkedin",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Linkedin"
+   },
+   {
+    "name": "sosmed_lain",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Sosmed lain"
+   },
+   {
+    "name": "disabilitas",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "TRUE/FALSE; kosong = belum diketahui.",
+    "label": "Disabilitas"
+   },
+   {
+    "name": "jenis_disabilitas",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "jenis_disabilitas",
+    "desc": "",
+    "label": "Jenis disabilitas"
+   },
+   {
+    "name": "kelompok_rentan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "kelompok_rentan",
+    "desc": "",
+    "label": "Kelompok rentan"
+   },
+   {
+    "name": "consent_data",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Persetujuan pemrosesan data pribadi (UU 27/2022).",
+    "label": "Consent data (UU PDP)"
+   },
+   {
+    "name": "tanggal_consent",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal consent"
+   },
+   {
+    "name": "metode_dedup",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "metode_dedup",
+    "desc": "Cara catatan lama digabung.",
+    "label": "Metode dedup"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Peserta"
+ },
+ "enrollment": {
+  "desc": "Keikutsertaan: satu baris = satu peserta dalam satu program/batch.",
+  "grp": "Inti",
+  "cols": [
+   {
+    "name": "enrollment_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "ID keikutsertaan.",
+    "label": "ID keikutsertaan"
+   },
+   {
+    "name": "peserta_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "peserta.peserta_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Peserta"
+   },
+   {
+    "name": "program_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_program.program_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Program"
+   },
+   {
+    "name": "mitra_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "mitra.mitra_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Mitra"
+   },
+   {
+    "name": "konversi_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "konversi_program_lama.konversi_id",
+    "req": false,
+    "enum": null,
+    "desc": "Jejak konversi (data lama).",
+    "label": "Konversi id"
+   },
+   {
+    "name": "nama_program_mitra",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nama program versi mitra.",
+    "label": "Nama program mitra"
+   },
+   {
+    "name": "batch",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Batch"
+   },
+   {
+    "name": "tahun_mulai",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tahun mulai"
+   },
+   {
+    "name": "tahun_selesai",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tahun selesai"
+   },
+   {
+    "name": "status_partisipasi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_partisipasi",
+    "desc": "",
+    "label": "Status partisipasi"
+   },
+   {
+    "name": "status_kelulusan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_kelulusan",
+    "desc": "",
+    "label": "Status kelulusan"
+   },
+   {
+    "name": "tingkat_kehadiran",
+    "typ": "numeric(5,4)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Proporsi 0–1.",
+    "label": "Tingkat kehadiran (0–1)"
+   },
+   {
+    "name": "peran_peserta",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "peran_peserta",
+    "desc": "",
+    "label": "Peran peserta"
+   },
+   {
+    "name": "unit_kelompok",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Tim/sekolah/posyandu/pokdarwis/kelompok.",
+    "label": "Unit kelompok"
+   },
+   {
+    "name": "kode_lama",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "ID baris di workbook versi per pilar (HCD-00001 dst.).",
+    "label": "Kode lama"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   },
+   {
+    "name": "sumber_data",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Sumber data"
+   }
+  ],
+  "label": "Keikutsertaan"
+ },
+ "baseline_peserta": {
+  "desc": "Kondisi peserta & rumah tangga saat mendaftar (HCD, ST). Satu per enrollment.",
+  "grp": "Pengukuran",
+  "cols": [
+   {
+    "name": "baseline_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID baseline"
+   },
+   {
+    "name": "enrollment_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "enrollment.enrollment_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Keikutsertaan"
+   },
+   {
+    "name": "tanggal_baseline",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Tanggal pengambilan data.",
+    "label": "Tanggal baseline"
+   },
+   {
+    "name": "motivasi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Motivasi"
+   },
+   {
+    "name": "pendidikan_terakhir",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "pendidikan",
+    "desc": "",
+    "label": "Pendidikan terakhir"
+   },
+   {
+    "name": "jurusan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jurusan"
+   },
+   {
+    "name": "institusi_pendidikan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Institusi pendidikan"
+   },
+   {
+    "name": "nilai_akademik",
+    "typ": "numeric(5,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "IPK (skala 4) atau nilai rata-rata rapor/ijazah (skala 10/100).",
+    "label": "Nilai akademik"
+   },
+   {
+    "name": "skala_nilai",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Skala nilai_akademik: 4, 10, atau 100.",
+    "label": "Skala nilai"
+   },
+   {
+    "name": "pekerjaan_sebelum",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Pekerjaan sebelum"
+   },
+   {
+    "name": "penghasilan_bulanan_sebelum",
+    "typ": "numeric(14,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Rupiah/bulan; 0 = tidak berpenghasilan.",
+    "label": "Penghasilan bulanan sebelum (Rp)"
+   },
+   {
+    "name": "jumlah_art",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jumlah anggota rumah tangga"
+   },
+   {
+    "name": "jumlah_art_bekerja",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jumlah ART bekerja"
+   },
+   {
+    "name": "penghasil_utama",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "penghasil_utama",
+    "desc": "",
+    "label": "Penghasil utama"
+   },
+   {
+    "name": "kategori_penghasilan_rt",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "kategori_penghasilan_rt",
+    "desc": "",
+    "label": "Kategori penghasilan rt"
+   },
+   {
+    "name": "penerima_bansos_dtks",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Penerima bansos / DTKS"
+   },
+   {
+    "name": "pekerjaan_ayah",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Pekerjaan ayah"
+   },
+   {
+    "name": "pekerjaan_ibu",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Pekerjaan ibu"
+   },
+   {
+    "name": "pekerjaan_wali",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Pekerjaan wali"
+   },
+   {
+    "name": "status_pernikahan_ortu",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_pernikahan",
+    "desc": "",
+    "label": "Status pernikahan ortu"
+   },
+   {
+    "name": "jumlah_saudara_kandung",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jumlah saudara kandung"
+   }
+  ],
+  "label": "Baseline"
+ },
+ "tracer_ketenagakerjaan": {
+  "desc": "Outcome ketenagakerjaan; boleh banyak putaran per enrollment.",
+  "grp": "Pengukuran",
+  "cols": [
+   {
+    "name": "tracer_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID tracer ketenagakerjaan"
+   },
+   {
+    "name": "enrollment_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "enrollment.enrollment_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Keikutsertaan"
+   },
+   {
+    "name": "putaran",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "putaran",
+    "desc": "Putaran pengukuran.",
+    "label": "Putaran"
+   },
+   {
+    "name": "tanggal_tracer",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal tracer"
+   },
+   {
+    "name": "status_pekerjaan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_pekerjaan",
+    "desc": "",
+    "label": "Status pekerjaan"
+   },
+   {
+    "name": "jabatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jabatan"
+   },
+   {
+    "name": "institusi_kerja",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Institusi kerja"
+   },
+   {
+    "name": "sektor_pekerjaan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "sektor_pekerjaan",
+    "desc": "",
+    "label": "Sektor pekerjaan"
+   },
+   {
+    "name": "lokasi_kerja",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "lokasi_kerja",
+    "desc": "",
+    "label": "Lokasi kerja"
+   },
+   {
+    "name": "tanggal_mulai_kerja",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal mulai kerja"
+   },
+   {
+    "name": "penghasilan_bulanan",
+    "typ": "numeric(14,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Rupiah/bulan.",
+    "label": "Penghasilan bulanan (Rp)"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Tracer Ketenagakerjaan"
+ },
+ "sertifikasi": {
+  "desc": "Sertifikat yang diperoleh peserta.",
+  "grp": "Pengukuran",
+  "cols": [
+   {
+    "name": "sertifikasi_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID sertifikasi"
+   },
+   {
+    "name": "enrollment_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "enrollment.enrollment_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Keikutsertaan"
+   },
+   {
+    "name": "jenis_sertifikasi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "jenis_sertifikasi",
+    "desc": "",
+    "label": "Jenis sertifikasi"
+   },
+   {
+    "name": "nama_sertifikat",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nama sertifikat"
+   },
+   {
+    "name": "lembaga_penerbit",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Lembaga penerbit"
+   },
+   {
+    "name": "nomor_sertifikat",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nomor sertifikat"
+   },
+   {
+    "name": "tanggal_terbit",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal terbit"
+   },
+   {
+    "name": "berlaku_sampai",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Berlaku sampai"
+   }
+  ],
+  "label": "Sertifikasi"
+ },
+ "pengukuran_kesehatan": {
+  "desc": "Antropometri/screening (stunting, KLA, health screening).",
+  "grp": "Pengukuran",
+  "cols": [
+   {
+    "name": "pengukuran_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID pengukuran kesehatan"
+   },
+   {
+    "name": "enrollment_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "enrollment.enrollment_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Keikutsertaan"
+   },
+   {
+    "name": "putaran",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "putaran",
+    "desc": "",
+    "label": "Putaran"
+   },
+   {
+    "name": "tanggal_ukur",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal ukur"
+   },
+   {
+    "name": "tinggi_cm",
+    "typ": "numeric(5,1)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tinggi (cm)"
+   },
+   {
+    "name": "berat_kg",
+    "typ": "numeric(5,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Berat (kg)"
+   },
+   {
+    "name": "status_gizi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_gizi",
+    "desc": "Klasifikasi tenaga kesehatan.",
+    "label": "Status gizi"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Pengukuran Kesehatan"
+ },
+ "kontribusi_lingkungan": {
+  "desc": "Kontribusi peserta pada kegiatan konservasi/pariwisata.",
+  "grp": "Pengukuran",
+  "cols": [
+   {
+    "name": "kontribusi_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID kontribusi lingkungan"
+   },
+   {
+    "name": "enrollment_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "enrollment.enrollment_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Keikutsertaan"
+   },
+   {
+    "name": "tanggal",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal"
+   },
+   {
+    "name": "jenis_kegiatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Mis. tanam mangrove, transplantasi karang, pelepasan tukik.",
+    "label": "Jenis kegiatan"
+   },
+   {
+    "name": "lokasi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Lokasi"
+   },
+   {
+    "name": "volume",
+    "typ": "numeric(12,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Volume"
+   },
+   {
+    "name": "satuan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "bibit, m², ekor, dll.",
+    "label": "Satuan"
+   }
+  ],
+  "label": "Kontribusi Lingkungan"
+ },
+ "usaha": {
+  "desc": "Usaha/UMKM sebagai entitas tersendiri (bisa dimiliki/dipekerjakan beberapa peserta).",
+  "grp": "Inti",
+  "cols": [
+   {
+    "name": "usaha_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID usaha"
+   },
+   {
+    "name": "nama_usaha",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nama usaha/merek.",
+    "label": "Nama usaha"
+   },
+   {
+    "name": "sektor_usaha",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "sektor_usaha",
+    "desc": "",
+    "label": "Sektor usaha"
+   },
+   {
+    "name": "produk_utama",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Produk utama"
+   },
+   {
+    "name": "tanggal_berdiri",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal berdiri"
+   },
+   {
+    "name": "wilayah_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_wilayah.wilayah_id",
+    "req": false,
+    "enum": null,
+    "desc": "Lokasi usaha.",
+    "label": "Wilayah"
+   },
+   {
+    "name": "nama_kelompok",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Kelompok/koperasi/BUMDes.",
+    "label": "Nama kelompok"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Usaha"
+ },
+ "peserta_usaha": {
+  "desc": "Relasi enrollment EE ↔ usaha beserta peran.",
+  "grp": "Inti",
+  "cols": [
+   {
+    "name": "peserta_usaha_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID relasi peserta–usaha"
+   },
+   {
+    "name": "enrollment_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "enrollment.enrollment_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Keikutsertaan"
+   },
+   {
+    "name": "usaha_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "usaha.usaha_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Usaha"
+   },
+   {
+    "name": "peran_usaha",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "peran_usaha",
+    "desc": "",
+    "label": "Peran usaha"
+   }
+  ],
+  "label": "Relasi Peserta–Usaha"
+ },
+ "usaha_legalitas": {
+  "desc": "Status legalitas usaha (format panjang: satu jenis izin per baris).",
+  "grp": "Pengukuran",
+  "cols": [
+   {
+    "name": "legalitas_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID legalitas usaha"
+   },
+   {
+    "name": "usaha_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "usaha.usaha_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Usaha"
+   },
+   {
+    "name": "jenis_legalitas",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "jenis_legalitas",
+    "desc": "",
+    "label": "Jenis legalitas"
+   },
+   {
+    "name": "dimiliki",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Dimiliki"
+   },
+   {
+    "name": "nomor_izin",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nomor izin"
+   },
+   {
+    "name": "tanggal_terbit",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal terbit"
+   },
+   {
+    "name": "putaran",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "putaran",
+    "desc": "",
+    "label": "Putaran"
+   },
+   {
+    "name": "sumber_data",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Sumber data"
+   }
+  ],
+  "label": "Legalitas Usaha"
+ },
+ "usaha_pemantauan": {
+  "desc": "Kondisi usaha per putaran (status, tenaga kerja, pemasaran).",
+  "grp": "Pengukuran",
+  "cols": [
+   {
+    "name": "pemantauan_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID pemantauan usaha"
+   },
+   {
+    "name": "usaha_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "usaha.usaha_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Usaha"
+   },
+   {
+    "name": "putaran",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "putaran",
+    "desc": "",
+    "label": "Putaran"
+   },
+   {
+    "name": "tanggal_pemantauan",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal pemantauan"
+   },
+   {
+    "name": "status_usaha",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_usaha",
+    "desc": "",
+    "label": "Status usaha"
+   },
+   {
+    "name": "tenaga_kerja_total",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tenaga kerja total"
+   },
+   {
+    "name": "tenaga_kerja_perempuan",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tenaga kerja perempuan"
+   },
+   {
+    "name": "kanal_pemasaran",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "kanal_pemasaran",
+    "desc": "",
+    "label": "Kanal pemasaran"
+   },
+   {
+    "name": "menjual_ecommerce",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Menjual ecommerce"
+   },
+   {
+    "name": "pernah_menerima_investasi",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Pernah menerima investasi"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Pemantauan Usaha"
+ },
+ "usaha_omzet_bulanan": {
+  "desc": "Omzet bulanan per usaha (satu baris per usaha per bulan).",
+  "grp": "Pengukuran",
+  "cols": [
+   {
+    "name": "omzet_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID omzet bulanan"
+   },
+   {
+    "name": "usaha_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "usaha.usaha_id",
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Usaha"
+   },
+   {
+    "name": "periode",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Tanggal 1 bulan bersangkutan.",
+    "label": "Periode"
+   },
+   {
+    "name": "omzet",
+    "typ": "numeric(16,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Rupiah.",
+    "label": "Omzet (Rp)"
+   },
+   {
+    "name": "volume_produksi",
+    "typ": "numeric(12,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Volume produksi"
+   },
+   {
+    "name": "satuan_produksi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Satuan produksi"
+   },
+   {
+    "name": "sumber_data",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Sumber data"
+   }
+  ],
+  "label": "Omzet Bulanan"
+ },
+ "lembaga_komunitas": {
+  "desc": "Kelembagaan komunitas yang dibentuk/diperkuat (PPM area 7).",
+  "grp": "Inti",
+  "cols": [
+   {
+    "name": "lembaga_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID lembaga komunitas"
+   },
+   {
+    "name": "nama_lembaga",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Nama lembaga"
+   },
+   {
+    "name": "jenis_lembaga",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "jenis_lembaga",
+    "desc": "",
+    "label": "Jenis lembaga"
+   },
+   {
+    "name": "program_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_program.program_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Program"
+   },
+   {
+    "name": "wilayah_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_wilayah.wilayah_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Wilayah"
+   },
+   {
+    "name": "tahun_dibentuk",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tahun dibentuk"
+   },
+   {
+    "name": "berbadan_hukum",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Berbadan hukum"
+   },
+   {
+    "name": "jumlah_anggota",
+    "typ": "integer",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jumlah anggota"
+   },
+   {
+    "name": "jumlah_anggota_perempuan",
+    "typ": "integer",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jumlah anggota perempuan"
+   },
+   {
+    "name": "tingkat_kemandirian",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "tingkat_kemandirian",
+    "desc": "Hasil asesmen kapasitas lembaga.",
+    "label": "Tingkat kemandirian"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Lembaga Komunitas"
+ },
+ "infrastruktur": {
+  "desc": "Aset infrastruktur pendukung PPM (PPM area 8).",
+  "grp": "Inti",
+  "cols": [
+   {
+    "name": "infrastruktur_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID infrastruktur"
+   },
+   {
+    "name": "nama_aset",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Nama aset"
+   },
+   {
+    "name": "jenis_infrastruktur",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "jenis_infrastruktur",
+    "desc": "",
+    "label": "Jenis infrastruktur"
+   },
+   {
+    "name": "program_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_program.program_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Program"
+   },
+   {
+    "name": "wilayah_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_wilayah.wilayah_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Wilayah"
+   },
+   {
+    "name": "tahun_selesai",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tahun selesai"
+   },
+   {
+    "name": "nilai_investasi",
+    "typ": "numeric(16,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Rupiah.",
+    "label": "Nilai investasi (Rp)"
+   },
+   {
+    "name": "status_aset",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_aset",
+    "desc": "",
+    "label": "Status aset"
+   },
+   {
+    "name": "penerima_manfaat_kk",
+    "typ": "integer",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Jumlah KK penerima manfaat.",
+    "label": "Penerima manfaat kk"
+   },
+   {
+    "name": "penerima_manfaat_jiwa",
+    "typ": "integer",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Jumlah jiwa penerima manfaat.",
+    "label": "Penerima manfaat jiwa"
+   },
+   {
+    "name": "lembaga_pengelola_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "lembaga_komunitas.lembaga_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Lembaga pengelola"
+   },
+   {
+    "name": "latitude",
+    "typ": "numeric(9,6)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Latitude"
+   },
+   {
+    "name": "longitude",
+    "typ": "numeric(9,6)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Longitude"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Infrastruktur"
+ },
+ "capaian_agregat": {
+  "desc": "Capaian tanpa data per orang (mis. donasi massal).",
+  "grp": "Inti",
+  "cols": [
+   {
+    "name": "capaian_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID capaian agregat"
+   },
+   {
+    "name": "nama_kegiatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Nama kegiatan"
+   },
+   {
+    "name": "program_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_program.program_id",
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Program"
+   },
+   {
+    "name": "tahun",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tahun"
+   },
+   {
+    "name": "jumlah_penerima",
+    "typ": "integer",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jumlah penerima"
+   },
+   {
+    "name": "satuan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Satuan"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Capaian Agregat"
+ },
+ "log_isu_data": {
+  "desc": "Temuan kualitas data dari migrasi; dipakai sebagai daftar kerja pembersihan.",
+  "grp": "Audit",
+  "cols": [
+   {
+    "name": "isu_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID isu data"
+   },
+   {
+    "name": "tabel",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Tabel"
+   },
+   {
+    "name": "record_id",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Record id"
+   },
+   {
+    "name": "kolom",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Kolom"
+   },
+   {
+    "name": "nilai_asli",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nilai asli"
+   },
+   {
+    "name": "jenis_isu",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Jenis isu"
+   },
+   {
+    "name": "tindakan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tindakan"
+   },
+   {
+    "name": "status",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "status_isu",
+    "desc": "",
+    "label": "Status"
+   }
+  ],
+  "label": "Isu Data"
+ }
+}
