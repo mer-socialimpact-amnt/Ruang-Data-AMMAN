@@ -1,0 +1,35 @@
+{
+  "name": "ruang-data",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Ruang Data \u2014 Satu Ruang, Beragam Data. Master data peserta Social Impact AMMAN.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:apply": "node scripts/apply-schema.mjs",
+    "db:seed": "node scripts/seed.mjs",
+    "db:check": "node scripts/check-db.mjs",
+    "user:admin": "node scripts/create-admin.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "3.0.3",
+    "jose": "6.2.18",
+    "next": "14.2.35",
+    "pg": "8.16.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.16.11",
+    "@types/pg": "8.15.5",
+    "@types/react": "18.3.11",
+    "@types/react-dom": "18.3.1",
+    "typescript": "5.6.3"
+  },
+  "engines": {
+    "node": ">=18.18"
+  }
+}
