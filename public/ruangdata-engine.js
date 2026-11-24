@@ -348,6 +348,7 @@ const ICON = {
   search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
   trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13M9 7V4h6v3"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
+  alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/>',
   download:'<path d="M12 3v12M7 10l5 5 5-5M4 19h16"/>',
 };
 const ico = (k) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k] || ''}</svg>`;
@@ -767,7 +768,7 @@ function pPengaturan(){
     </div>
     <div class="card sect"><h3>Skala tampilan</h3><div class="sub">Ukuran tampilan aplikasi di layar desktop (seperti zoom browser). Bawaan 80% agar seluruh halaman muat di layar. Tersimpan di browser ini.</div>
       <div class="toolbar" style="margin:0">${[['0.67','67%'],['0.8','80%'],['0.9','90%'],['1','100%']].map(([v,l]) => `<button class="btn ${String(curZoom())===v?'pri':''}" data-zoom="${v}">${l}</button>`).join('')}</div></div>
-    <div class="card sect"><h3>Ekspor per tabel (CSV, siap impor ke PostgreSQL/Supabase)</h3><div class="sub">Nama dan urutan kolom sama dengan skema database (schema_social_impact_amman.sql). Impor sesuai urutan di bawah.</div>
+    <div class="card sect"><h3>Ekspor per tabel (CSV, siap impor ke PostgreSQL/Neon)</h3><div class="sub">Nama dan urutan kolom sama dengan skema database (schema_social_impact_amman.sql). Impor sesuai urutan di bawah.</div>
       <div class="tbl-wrap"><table><thead><tr><th class="num">#</th><th>Tabel</th><th>Deskripsi</th><th class="num">Baris</th><th></th></tr></thead><tbody>
       ${sizes.map(([t, n], i) => `<tr><td class="num">${i+1}</td><td><span class="mask">${esc(t)}</span></td><td class="small">${esc(SCHEMA[t].desc)}</td><td class="num">${fmt(n)}</td><td><button class="btn sm" data-export="${esc(t)}">CSV</button></td></tr>`).join('')}
       </tbody></table></div><div class="toolbar" style="margin-top:10px"><button class="btn dark" data-act="exportall">Ekspor semua tabel</button></div></div>`};
@@ -1293,10 +1294,55 @@ function openForm(t, row, isNew, pre={}){
     return `<div class="f ${full?'full':''}"><label for="${id}">${esc(c.label)} ${c.req?'<span class="rq">*</span>':''}</label>${input}<div class="sugg" data-sugg="${c.name}"></div><div class="h">${esc(c.desc||'')}</div><div class="err" data-err="${c.name}"></div></div>`;
   }).join('');
   REOPEN = DRAWER_CTX && DRAWER_CTX.reopen ? DRAWER_CTX.reopen : null;
-  openDrawer((isNew ? 'Tambah ' : 'Ubah ') + def.label, `<div class="note">${esc(def.desc)}</div><div class="toolbar"><button type="button" class="btn sm pri" data-act="autofill">${ico('plus')}Isi otomatis dari saran</button><span class="muted small">Mengisi kolom kosong dengan saran utama (penanda lime). Klik saran mana pun di bawah kolom untuk mengisinya.</span></div><form class="form" id="frm" data-t="${t}" data-isnew="${isNew?1:0}" data-orig='${esc(JSON.stringify(isNew ? {} : row))}' data-pre='${esc(JSON.stringify(pre))}'>${fields}
+  const riw = t === 'enrollment' && r.peserta_id ? (IX.enrByP.get(r.peserta_id) || []).filter(e => e.enrollment_id !== r.enrollment_id) : [];
+  const riwHtml = t === 'enrollment' && r.peserta_id ? `<div class="note"><b>${esc((IX.peserta.get(r.peserta_id) || {}).nama || r.peserta_id)}</b> · riwayat keikutsertaan: ${riw.length ? riw.map(e => `${esc(e.program_id)}${e.batch ? ' batch ' + esc(e.batch) : ''}${e.tahun_mulai ? ' (' + e.tahun_mulai + ')' : ''}`).join('; ') : 'belum ada'}. Program, batch & tahun yang sama tidak bisa didaftarkan dua kali.</div>` : '';
+  openDrawer((isNew ? 'Tambah ' : 'Ubah ') + def.label, `<div class="note">${esc(def.desc)}</div>${riwHtml}<div class="toolbar"><button type="button" class="btn sm pri" data-act="autofill">${ico('plus')}Isi otomatis dari saran</button><span class="muted small">Mengisi kolom kosong dengan saran utama (penanda lime). Klik saran mana pun di bawah kolom untuk mengisinya.</span></div><form class="form" id="frm" data-t="${t}" data-isnew="${isNew?1:0}" data-orig='${esc(JSON.stringify(isNew ? {} : row))}' data-pre='${esc(JSON.stringify(pre))}'>${fields}
     <div class="actions">${!isNew && !NO_DEL.has(t) ? `<button type="button" class="btn danger" data-delask="${t}" data-id="${esc(keyOf(t,row))}" style="margin-right:auto">Hapus</button>` : ''}<button type="button" class="btn" data-act="close">Batal</button><button type="submit" class="btn pri">Simpan</button></div></form>`);
   updateSugg();
 }
+/* ===================== deteksi data ganda ===================== */
+const GELAR_RE = /\b(hj?|ir|dr|drs|dra|prof|s\.?\s?(pd|e|t|h|kom|sos|ag|ip|kep|km|si|ak|psi)|a\.?\s?md|m\.?\s?(pd|si|m|t|h|kes)|st|se|sh|spd)\b\.?/g;
+function normNama(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(GELAR_RE,' ').replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim(); }
+function simNama(a, b){
+  a = normNama(a); b = normNama(b); if (!a || !b) return 0; if (a === b) return 1;
+  const g = s => { s = ' ' + s + ' '; const m = new Map(); for (let i = 0; i < s.length - 1; i++) { const k = s.slice(i, i + 2); m.set(k, (m.get(k) || 0) + 1); } return m; };
+  const A = g(a), B = g(b); let inter = 0, tot = 0; A.forEach((v, k) => { inter += Math.min(v, B.get(k) || 0); tot += v; }); B.forEach(v => tot += v);
+  return 2 * inter / tot;
+}
+/** Peserta lain yang kemungkinan orang yang sama (peringatan, bukan penolakan). */
+function kandidatGanda(row){
+  const nik = (row.nik || '').replace(/\s/g, ''), out = [];
+  if (!row.nama) return out;
+  for (const p of DB.peserta) {
+    if (p.peserta_id === row.peserta_id) continue;
+    const s = simNama(p.nama, row.nama); let alasan = null;
+    if (nik.length >= 12 && p.nik && p.nik.slice(0, 12) === nik.slice(0, 12) && s >= 0.6) alasan = 'Kode wilayah & tanggal lahir dalam NIK sama, nama mirip';
+    else if (row.tanggal_lahir && p.tanggal_lahir === row.tanggal_lahir && s >= 0.75) alasan = 'Tanggal lahir sama, nama mirip';
+    else if ((!row.tanggal_lahir || !p.tanggal_lahir) && s >= 0.92 && row.wilayah_id && p.wilayah_id === row.wilayah_id) alasan = 'Nama hampir sama di wilayah yang sama (tanggal lahir tidak lengkap)';
+    if (alasan) out.push({p, s, alasan});
+  }
+  return out.sort((a, b) => b.s - a.s).slice(0, 5);
+}
+function tampilKandidat(frm, list){
+  let box = frm.querySelector('#dupwarn');
+  if (!box) { box = document.createElement('div'); box.id = 'dupwarn'; box.className = 'dupwarn full'; frm.prepend(box); }
+  box.innerHTML = `<div class="dwh">${ico('alert')}<b>Kemungkinan peserta ini sudah terdaftar</b></div>
+    <p>Bila orangnya sama, <b>jangan buat peserta baru</b>. Pilih <b>Gunakan peserta ini</b> untuk menambahkan keikutsertaan (kegiatan) baru pada data yang sudah ada.</p>
+    ${list.map(({p, s, alasan}) => { const n = (IX.enrByP.get(p.peserta_id) || []).length; return `<div class="dc"><div><b>${esc(p.nama || '–')}</b> <span class="muted small">${esc(p.peserta_id)}</span>
+      <div class="small muted">${esc(p.tanggal_lahir ? new Date(p.tanggal_lahir + 'T00:00:00').toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : 'Tgl lahir –')} · ${esc(wilText(p.wilayah_id))} · NIK ${esc(maskId(p.nik) || '–')} · ${fmt(n)} keikutsertaan</div>
+      <div class="small"><span class="pill warn">${esc(alasan)}</span> <span class="muted">kemiripan nama ${Math.round(s * 100)}%</span></div></div>
+      <button type="button" class="btn sm pri" data-usep="${esc(p.peserta_id)}">Gunakan peserta ini</button></div>`; }).join('')}
+    <div class="df"><button type="button" class="btn sm" data-act="dupok">Ini orang berbeda, tetap simpan sebagai peserta baru</button></div>`;
+  box.scrollIntoView({block: 'start', behavior: 'smooth'});
+}
+function enrollmentGanda(row, orig){
+  if (!row.peserta_id || !row.program_id) return null;
+  const k = e => [e.peserta_id, e.program_id, String(e.batch ?? '').trim().toLowerCase(), e.tahun_mulai ?? ''].join('|');
+  const kr = k(row);
+  if (orig && orig.enrollment_id && k(orig) === kr) return null; // kombinasi tidak berubah (data lama boleh disimpan)
+  return DB.enrollment.find(e => e.enrollment_id !== row.enrollment_id && k(e) === kr) || null;
+}
+
 function readForm(frm){
   const t = frm.dataset.t; const def = SCHEMA[t]; const isNew = frm.dataset.isnew === '1';
   const orig = JSON.parse(frm.dataset.orig || '{}'); const pre = JSON.parse(frm.dataset.pre || '{}');
@@ -1329,6 +1375,7 @@ function readForm(frm){
   if (t === 'baseline_peserta' && row.nilai_akademik != null && (row.skala_nilai == null || row.nilai_akademik > row.skala_nilai)) errs.skala_nilai = 'Isi skala (4/10/100) dan pastikan nilai ≤ skala';
   if (t === 'enrollment' && row.tingkat_kehadiran != null && (row.tingkat_kehadiran < 0 || row.tingkat_kehadiran > 1)) errs.tingkat_kehadiran = 'Isi proporsi 0–1 (mis. 0,85)';
   if (t === 'enrollment' && row.tahun_mulai && row.tahun_selesai && row.tahun_selesai < row.tahun_mulai) errs.tahun_selesai = 'Tahun selesai sebelum tahun mulai';
+  if (t === 'enrollment') { const dup = enrollmentGanda(row, isNew ? null : orig); if (dup) errs.program_id = `Peserta ini sudah terdaftar di program yang sama dengan batch & tahun mulai yang sama (${dup.enrollment_id}${dup.batch ? ', batch ' + dup.batch : ''}${dup.tahun_mulai ? ', ' + dup.tahun_mulai : ''}). Ubah keikutsertaan tersebut, atau isi batch/tahun yang berbeda bila memang mengikuti ulang.`; }
   if (isNew) { const k = keyOf(t, row); if (DB[t].some(r => keyOf(t, r) === k)) errs[PK[t][0]] = 'ID sudah dipakai'; }
   return {t, row, errs};
 }
@@ -1345,9 +1392,11 @@ function download(name, text, type='text/csv'){
 
 /* ===================== events ===================== */
 document.addEventListener('click', ev => {
-  const el = ev.target.closest('[data-zoom],[data-uact],[data-fill],[data-sel],[data-selall],[data-delask],[data-mact],[data-act],[data-new],[data-edit],[data-peserta],[data-usaha],[data-page],[data-tab],[data-export],[data-export-view],[data-isu],[data-isuj],[data-go],[data-del]');
+  const el = ev.target.closest('[data-usep],[data-zoom],[data-uact],[data-fill],[data-sel],[data-selall],[data-delask],[data-mact],[data-act],[data-new],[data-edit],[data-peserta],[data-usaha],[data-page],[data-tab],[data-export],[data-export-view],[data-isu],[data-isuj],[data-go],[data-del]');
   if (!el) { if (ev.target.id === 'ov') closeDrawer(); return; }
   const d = el.dataset;
+  if (d.usep) { const id = d.usep; const fn = () => { pesertaDetail(id); DRAWER_CTX.reopen = fn; }; fn(); openForm('enrollment', null, true, {peserta_id: id}); REOPEN = fn; toast('Peserta lama dipakai. Lengkapi keikutsertaan (kegiatan) barunya.'); return; }
+  if (d.act === 'dupok') { const f = document.getElementById('frm'); if (f) { f.dataset.dupok = '1'; f.requestSubmit(); } return; }
   if (d.zoom) { setZoom(d.zoom); return; }
   if (d.act === 'autofill') { autoFill(); return; }
   if (d.fill) { fillField(d.fill, d.val); return; }
@@ -1406,6 +1455,7 @@ document.addEventListener('submit', ev => {
   const frm = ev.target; frm.querySelectorAll('[data-err]').forEach(e => e.textContent = '');
   const {t, row, errs} = readForm(frm);
   if (Object.keys(errs).length) { Object.entries(errs).forEach(([k, m]) => { const e = frm.querySelector(`[data-err="${k}"]`); if (e) e.textContent = m; else toast(m); }); const first = frm.querySelector('.err:not(:empty)'); if (first) first.scrollIntoView({block:'center'}); return; }
+  if (t === 'peserta' && frm.dataset.isnew === '1' && frm.dataset.dupok !== '1') { const k = kandidatGanda(row); if (k.length) { tampilKandidat(frm, k); return; } }
   commit(t, row, frm.dataset.isnew === '1' ? 'ins' : 'up'); toast(SCHEMA[t].label + ' tersimpan');
   if (t === 'peserta' && frm.dataset.isnew === '1') { rerender(); const id = row.peserta_id; const fn = () => { pesertaDetail(id); DRAWER_CTX.reopen = fn; }; fn(); return; }
   rerender();
