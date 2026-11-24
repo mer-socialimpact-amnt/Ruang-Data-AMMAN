@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import type { PoolClient } from 'pg';
 import { pool } from '@/lib/db';
 import { getAppUser } from '@/lib/auth';
 import { ADMIN_TABLES, SCHEMA, pkOf, q } from '@/lib/schema';
@@ -15,6 +16,21 @@ function coerce(typ: string, v: unknown): unknown {
   if (typ.startsWith('numeric')) { const n = Number(v); if (!Number.isFinite(n)) throw new Error('bukan angka'); return n; }
   if (typ === 'date') { const s = String(v).slice(0, 10); if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) throw new Error('format tanggal harus YYYY-MM-DD'); return s; }
   return String(v);
+}
+
+/** Tolak keikutsertaan ganda: peserta + program + batch + tahun mulai yang sama.
+ *  Keikutsertaan lama yang sudah ganda tetap bisa diubah selama kombinasinya tidak berubah. */
+async function cekEnrollmentGanda(client: PoolClient, row: Record<string, unknown>) {
+  if (!row.peserta_id || !row.program_id || !row.enrollment_id) return;
+  const kombinasi = `peserta_id = $1 AND program_id = $2 AND coalesce(batch::text, '') = coalesce($3::text, '') AND tahun_mulai IS NOT DISTINCT FROM $4::int`;
+  const params = [row.peserta_id, row.program_id, row.batch ?? null, row.tahun_mulai ?? null];
+  const sendiri = await client.query(`SELECT 1 FROM si.enrollment WHERE enrollment_id = $5 AND ${kombinasi}`, [...params, row.enrollment_id]);
+  if (sendiri.rowCount) return;
+  const r = await client.query(`SELECT enrollment_id FROM si.enrollment WHERE enrollment_id <> $5 AND ${kombinasi} LIMIT 1`, [...params, row.enrollment_id]);
+  if (r.rowCount) {
+    const e = new Error(`Peserta ${row.peserta_id} sudah terdaftar di program ${row.program_id} dengan batch dan tahun mulai yang sama (${r.rows[0].enrollment_id}). Ubah keikutsertaan tersebut, atau isi batch/tahun yang berbeda bila memang mengikuti ulang.`) as Error & { code?: string };
+    e.code = 'RD_DUP'; throw e;
+  }
 }
 
 export async function POST(req: Request) {
@@ -65,6 +81,7 @@ export async function POST(req: Request) {
   try {
     await client.query('BEGIN');
     for (const s of stmts) {
+      if (s.t === 'enrollment' && s.op !== 'del') await cekEnrollmentGanda(client, s.row);
       await client.query(s.sql, s.params);
       await client.query('INSERT INTO si.audit_log (user_id, email, tabel, aksi, record_key, data) VALUES ($1, $2, $3, $4, $5, $6)',
         [/^[0-9a-f-]{36}$/.test(user.id) ? user.id : null, user.email, s.t, s.op, s.key, s.op === 'del' ? null : JSON.stringify(s.row)]);
@@ -74,6 +91,7 @@ export async function POST(req: Request) {
   } catch (e) {
     await client.query('ROLLBACK').catch(() => {});
     const err = e as { code?: string; message: string; detail?: string; constraint?: string };
+    if (err.code === 'RD_DUP') return NextResponse.json({ error: err.message }, { status: 409 });
     const msg = err.code === '23505' ? 'Data dengan ID/kunci yang sama sudah ada (mungkin baru dibuat pengguna lain). Muat ulang lalu simpan kembali.'
       : err.code === '23503' ? 'Data masih dirujuk oleh data lain atau rujukan tidak ditemukan.'
       : err.code === '23514' ? `Nilai tidak sesuai aturan (${err.constraint || 'check'}).`
