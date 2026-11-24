@@ -177,6 +177,11 @@ td.sel,th.sel{width:38px;text-align:center;padding-left:14px;padding-right:4px}
 .form .f label .rq{color:var(--danger)}
 .form .f .h{font-size:11px;color:var(--muted);line-height:1.4}
 .form .err{color:var(--danger);font-size:11.5px;font-weight:500}
+.dupwarn{grid-column:1/-1;border:1px solid #F5C26B;background:#FFF8E8;border-radius:12px;padding:14px 16px;margin-bottom:4px}
+.dupwarn .dwh{display:flex;align-items:center;gap:8px;color:#8A5A00;font-size:13.5px}.dupwarn .dwh svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.dupwarn p{margin:6px 0 10px;font-size:12.5px;color:var(--ink-2,#4a4240)}
+.dupwarn .dc{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid var(--line,#E7E2DF);border-radius:10px;padding:10px 12px;margin-top:8px}
+.dupwarn .dc .small{margin-top:3px}.dupwarn .df{margin-top:10px;text-align:right}
 .form .err:empty{display:none}
 .form .actions{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end;margin-top:4px;padding-top:14px;border-top:1px solid var(--line)}
 .sugg{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
