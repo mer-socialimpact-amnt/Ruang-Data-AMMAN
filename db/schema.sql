@@ -436,6 +436,132 @@ CREATE TABLE IF NOT EXISTS si.capaian_agregat (
 );
 COMMENT ON TABLE si.capaian_agregat IS 'Capaian tanpa data per orang (mis. donasi massal).';
 
+CREATE TABLE IF NOT EXISTS si.epp_kegiatan (
+  epp_id text,
+  tanggal date NOT NULL,
+  domain text CHECK (domain IN ('kesehatan', 'pendidikan', 'lingkungan', 'beach_cleanup', 'difabel', 'gotong_royong', 'kebencanaan', 'keselamatan', 'donor_darah', 'olahraga', 'sosial')),
+  nama_kegiatan text NOT NULL,
+  level text CHECK (level IN ('kecamatan', 'kabupaten', 'wilayah_eksplorasi')),
+  kabupaten text,
+  kecamatan text,
+  wilayah_id text REFERENCES si.ref_wilayah(wilayah_id),
+  region text,
+  ring text CHECK (ring IN ('ring_1', 'ring_2', 'ring_3')),
+  inisiator text,
+  jumlah_relawan integer NOT NULL,
+  jam_relawan numeric(10,2),
+  penerima_manfaat integer,
+  catatan text,
+  PRIMARY KEY (epp_id)
+);
+COMMENT ON TABLE si.epp_kegiatan IS 'Kegiatan Employee Participation Program (employee volunteering): satu baris per kegiatan.';
+COMMENT ON COLUMN si.epp_kegiatan.tanggal IS 'Tanggal kegiatan.';
+COMMENT ON COLUMN si.epp_kegiatan.domain IS 'Bidang kegiatan.';
+COMMENT ON COLUMN si.epp_kegiatan.level IS 'Cakupan wilayah kegiatan.';
+COMMENT ON COLUMN si.epp_kegiatan.wilayah_id IS 'Kecamatan/kabupaten di referensi wilayah (bila cocok).';
+COMMENT ON COLUMN si.epp_kegiatan.region IS 'Kode region internal (SKK, MLK, JRW, KSB, KS, EXP, …).';
+COMMENT ON COLUMN si.epp_kegiatan.inisiator IS 'Departemen/pihak pengusul.';
+COMMENT ON COLUMN si.epp_kegiatan.jumlah_relawan IS 'Jumlah relawan karyawan yang terlibat.';
+COMMENT ON COLUMN si.epp_kegiatan.jam_relawan IS 'Total jam relawan (volunteer hours).';
+COMMENT ON COLUMN si.epp_kegiatan.penerima_manfaat IS 'Jumlah penerima manfaat langsung.';
+
+CREATE TABLE IF NOT EXISTS si.donasi (
+  donasi_id text,
+  kode_proyek text UNIQUE,
+  tanggal_komite date,
+  tanggal_diterima date,
+  diterima_oleh text,
+  tanggal_proposal date,
+  area_ppm text,
+  ppm_area_kode smallint REFERENCES si.ref_ppm_area(ppm_area_kode),
+  rippm_kode text,
+  rippm_uraian text,
+  lokasi text,
+  ring text CHECK (ring IN ('ring_1', 'ring_2', 'ring_3')),
+  provinsi text,
+  kabupaten text,
+  wilayah_id text REFERENCES si.ref_wilayah(wilayah_id),
+  domain text CHECK (domain IN ('sosial_budaya_olahraga', 'infrastruktur', 'pendidikan', 'lingkungan', 'kesehatan', 'ekonomi', 'keagamaan')),
+  kategori_penerima text,
+  diusulkan_oleh text,
+  alamat text,
+  nama_kegiatan text NOT NULL,
+  deskripsi text,
+  jadwal_kegiatan text,
+  nilai_proposal numeric(16,2),
+  nilai_rekomendasi numeric(16,2),
+  nilai_disetujui numeric(16,2),
+  rekomendasi_oleh text,
+  metode_pembayaran text CHECK (metode_pembayaran IN ('noi', 'material', 'noi_material')),
+  dokumen_proposal text,
+  status text NOT NULL CHECK (status IN ('diajukan', 'direkomendasikan', 'disetujui', 'ditolak', 'disalurkan')),
+  kegiatan_tahunan boolean,
+  catatan text,
+  PRIMARY KEY (donasi_id)
+);
+COMMENT ON TABLE si.donasi IS 'Donasi / hibah sosial: satu baris per proposal donasi.';
+COMMENT ON COLUMN si.donasi.kode_proyek IS 'Kode proyek dari komite donasi.';
+COMMENT ON COLUMN si.donasi.tanggal_komite IS 'Tanggal rapat komite donasi.';
+COMMENT ON COLUMN si.donasi.tanggal_diterima IS 'Tanggal proposal diterima.';
+COMMENT ON COLUMN si.donasi.tanggal_proposal IS 'Tanggal pada proposal (bila jelas).';
+COMMENT ON COLUMN si.donasi.area_ppm IS 'Area PPM sebagaimana tertulis.';
+COMMENT ON COLUMN si.donasi.ppm_area_kode IS 'Nomor area PPM (dari kode RIPPM).';
+COMMENT ON COLUMN si.donasi.rippm_kode IS 'Kode kegiatan RIPPM, mis. 5b.';
+COMMENT ON COLUMN si.donasi.lokasi IS 'Lokasi/region penerima.';
+COMMENT ON COLUMN si.donasi.wilayah_id IS 'Kabupaten di referensi wilayah (bila cocok).';
+COMMENT ON COLUMN si.donasi.kategori_penerima IS 'Kategori institusi/penerima manfaat.';
+COMMENT ON COLUMN si.donasi.diusulkan_oleh IS 'Pengusul proposal.';
+COMMENT ON COLUMN si.donasi.nilai_proposal IS 'Rupiah.';
+COMMENT ON COLUMN si.donasi.nilai_rekomendasi IS 'Rupiah.';
+COMMENT ON COLUMN si.donasi.nilai_disetujui IS 'Rupiah.';
+COMMENT ON COLUMN si.donasi.dokumen_proposal IS 'Nama berkas proposal.';
+COMMENT ON COLUMN si.donasi.kegiatan_tahunan IS 'Donasi rutin tahunan.';
+
+CREATE TABLE IF NOT EXISTS si.internship (
+  magang_id text,
+  batch smallint,
+  tahun smallint,
+  kode_kurikulum text,
+  id_badge text,
+  nama text NOT NULL,
+  jenis_kelamin text CHECK (jenis_kelamin IN ('laki_laki', 'perempuan')),
+  tanggal_mulai_rencana date,
+  tanggal_selesai_rencana date,
+  tanggal_mulai_aktual date,
+  tanggal_selesai_aktual date,
+  durasi_bulan smallint,
+  tujuan text CHECK (tujuan IN ('pkl', 'penelitian')),
+  institusi text,
+  cakupan_institusi text CHECK (cakupan_institusi IN ('nasional', 'internasional')),
+  jurusan text,
+  peminatan text,
+  jenjang text CHECK (jenjang IN ('sma', 'smk', 'd1', 'd3', 'd4', 's1', 's2', 's3')),
+  domisili text CHECK (domisili IN ('ksb', 'ntb_non_ksb', 'non_ntb', 'luar_negeri')),
+  status text CHECK (status IN ('menunggu', 'berjalan', 'selesai', 'batal')),
+  area_kerja text,
+  departemen text,
+  bagian text,
+  pembimbing text,
+  pelatihan_k3 text,
+  nilai_akhir numeric(5,2),
+  predikat text CHECK (predikat IN ('sangat_baik', 'baik', 'memuaskan', 'cukup')),
+  nomor_sertifikat text,
+  email text,
+  telepon text,
+  peserta_id text REFERENCES si.peserta(peserta_id),
+  catatan text,
+  PRIMARY KEY (magang_id)
+);
+COMMENT ON TABLE si.internship IS 'Program magang (PKL/penelitian): satu baris per penempatan magang.';
+COMMENT ON COLUMN si.internship.batch IS 'Nomor batch.';
+COMMENT ON COLUMN si.internship.id_badge IS 'Nomor ID badge.';
+COMMENT ON COLUMN si.internship.institusi IS 'Universitas/sekolah asal.';
+COMMENT ON COLUMN si.internship.area_kerja IS 'Area penempatan.';
+COMMENT ON COLUMN si.internship.pembimbing IS 'PIC/pembimbing di AMMAN.';
+COMMENT ON COLUMN si.internship.pelatihan_k3 IS 'Pelatihan K3 yang diikuti.';
+COMMENT ON COLUMN si.internship.nilai_akhir IS '0–100.';
+COMMENT ON COLUMN si.internship.peserta_id IS 'Tautan opsional ke master peserta bila orangnya juga penerima manfaat pilar.';
+
 CREATE TABLE IF NOT EXISTS si.log_isu_data (
   isu_id text,
   tabel text NOT NULL,
