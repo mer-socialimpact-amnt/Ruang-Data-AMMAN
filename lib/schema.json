@@ -2377,6 +2377,807 @@
   ],
   "label": "Capaian Agregat"
  },
+ "epp_kegiatan": {
+  "desc": "Kegiatan Employee Participation Program (employee volunteering): satu baris per kegiatan.",
+  "grp": "Program",
+  "cols": [
+   {
+    "name": "epp_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID kegiatan epp"
+   },
+   {
+    "name": "tanggal",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Tanggal kegiatan.",
+    "label": "Tanggal"
+   },
+   {
+    "name": "domain",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "epp_domain",
+    "desc": "Bidang kegiatan.",
+    "label": "Domain"
+   },
+   {
+    "name": "nama_kegiatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Nama kegiatan"
+   },
+   {
+    "name": "level",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "epp_level",
+    "desc": "Cakupan wilayah kegiatan.",
+    "label": "Level"
+   },
+   {
+    "name": "kabupaten",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Kabupaten"
+   },
+   {
+    "name": "kecamatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Kecamatan"
+   },
+   {
+    "name": "wilayah_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_wilayah.wilayah_id",
+    "req": false,
+    "enum": null,
+    "desc": "Kecamatan/kabupaten di referensi wilayah (bila cocok).",
+    "label": "Wilayah"
+   },
+   {
+    "name": "region",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Kode region internal (SKK, MLK, JRW, KSB, KS, EXP, …).",
+    "label": "Region"
+   },
+   {
+    "name": "ring",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "ring",
+    "desc": "",
+    "label": "Ring"
+   },
+   {
+    "name": "inisiator",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Departemen/pihak pengusul.",
+    "label": "Inisiator"
+   },
+   {
+    "name": "jumlah_relawan",
+    "typ": "integer",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "Jumlah relawan karyawan yang terlibat.",
+    "label": "Jumlah relawan"
+   },
+   {
+    "name": "jam_relawan",
+    "typ": "numeric(10,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Total jam relawan (volunteer hours).",
+    "label": "Jam relawan"
+   },
+   {
+    "name": "penerima_manfaat",
+    "typ": "integer",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Jumlah penerima manfaat langsung.",
+    "label": "Penerima manfaat"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Kegiatan EPP"
+ },
+ "donasi": {
+  "desc": "Donasi / hibah sosial: satu baris per proposal donasi.",
+  "grp": "Program",
+  "cols": [
+   {
+    "name": "donasi_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID donasi"
+   },
+   {
+    "name": "kode_proyek",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Kode proyek dari komite donasi.",
+    "label": "Kode proyek"
+   },
+   {
+    "name": "tanggal_komite",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Tanggal rapat komite donasi.",
+    "label": "Tanggal komite"
+   },
+   {
+    "name": "tanggal_diterima",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Tanggal proposal diterima.",
+    "label": "Tanggal diterima"
+   },
+   {
+    "name": "diterima_oleh",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Diterima oleh"
+   },
+   {
+    "name": "tanggal_proposal",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Tanggal pada proposal (bila jelas).",
+    "label": "Tanggal proposal"
+   },
+   {
+    "name": "area_ppm",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Area PPM sebagaimana tertulis.",
+    "label": "Area PPM (sesuai proposal)"
+   },
+   {
+    "name": "ppm_area_kode",
+    "typ": "smallint",
+    "pk": false,
+    "fk": "ref_ppm_area.ppm_area_kode",
+    "req": false,
+    "enum": null,
+    "desc": "Nomor area PPM (dari kode RIPPM).",
+    "label": "Area PPM"
+   },
+   {
+    "name": "rippm_kode",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Kode kegiatan RIPPM, mis. 5b.",
+    "label": "Kode RIPPM"
+   },
+   {
+    "name": "rippm_uraian",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Uraian RIPPM"
+   },
+   {
+    "name": "lokasi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Lokasi/region penerima.",
+    "label": "Lokasi"
+   },
+   {
+    "name": "ring",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "ring",
+    "desc": "",
+    "label": "Ring"
+   },
+   {
+    "name": "provinsi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Provinsi"
+   },
+   {
+    "name": "kabupaten",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Kabupaten"
+   },
+   {
+    "name": "wilayah_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "ref_wilayah.wilayah_id",
+    "req": false,
+    "enum": null,
+    "desc": "Kabupaten di referensi wilayah (bila cocok).",
+    "label": "Wilayah"
+   },
+   {
+    "name": "domain",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "donasi_domain",
+    "desc": "",
+    "label": "Domain"
+   },
+   {
+    "name": "kategori_penerima",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Kategori institusi/penerima manfaat.",
+    "label": "Kategori penerima"
+   },
+   {
+    "name": "diusulkan_oleh",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Pengusul proposal.",
+    "label": "Diusulkan oleh"
+   },
+   {
+    "name": "alamat",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Alamat"
+   },
+   {
+    "name": "nama_kegiatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Nama kegiatan"
+   },
+   {
+    "name": "deskripsi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Deskripsi"
+   },
+   {
+    "name": "jadwal_kegiatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jadwal kegiatan"
+   },
+   {
+    "name": "nilai_proposal",
+    "typ": "numeric(16,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Rupiah.",
+    "label": "Nilai proposal (Rp)"
+   },
+   {
+    "name": "nilai_rekomendasi",
+    "typ": "numeric(16,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Rupiah.",
+    "label": "Nilai rekomendasi (Rp)"
+   },
+   {
+    "name": "nilai_disetujui",
+    "typ": "numeric(16,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Rupiah.",
+    "label": "Nilai disetujui (Rp)"
+   },
+   {
+    "name": "rekomendasi_oleh",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Rekomendasi oleh"
+   },
+   {
+    "name": "metode_pembayaran",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "metode_pembayaran",
+    "desc": "",
+    "label": "Metode pembayaran"
+   },
+   {
+    "name": "dokumen_proposal",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nama berkas proposal.",
+    "label": "Dokumen proposal"
+   },
+   {
+    "name": "status",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": "status_donasi",
+    "desc": "",
+    "label": "Status"
+   },
+   {
+    "name": "kegiatan_tahunan",
+    "typ": "boolean",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Donasi rutin tahunan.",
+    "label": "Kegiatan tahunan"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Donasi"
+ },
+ "internship": {
+  "desc": "Program magang (PKL/penelitian): satu baris per penempatan magang.",
+  "grp": "Program",
+  "cols": [
+   {
+    "name": "magang_id",
+    "typ": "text",
+    "pk": true,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "ID peserta magang"
+   },
+   {
+    "name": "batch",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nomor batch.",
+    "label": "Batch"
+   },
+   {
+    "name": "tahun",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tahun"
+   },
+   {
+    "name": "kode_kurikulum",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Kode kurikulum"
+   },
+   {
+    "name": "id_badge",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Nomor ID badge.",
+    "label": "ID badge"
+   },
+   {
+    "name": "nama",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": true,
+    "enum": null,
+    "desc": "",
+    "label": "Nama"
+   },
+   {
+    "name": "jenis_kelamin",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "jenis_kelamin",
+    "desc": "",
+    "label": "Jenis kelamin"
+   },
+   {
+    "name": "tanggal_mulai_rencana",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal mulai (rencana)"
+   },
+   {
+    "name": "tanggal_selesai_rencana",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal selesai (rencana)"
+   },
+   {
+    "name": "tanggal_mulai_aktual",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal mulai (aktual)"
+   },
+   {
+    "name": "tanggal_selesai_aktual",
+    "typ": "date",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Tanggal selesai (aktual)"
+   },
+   {
+    "name": "durasi_bulan",
+    "typ": "smallint",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Durasi (bulan)"
+   },
+   {
+    "name": "tujuan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "tujuan_magang",
+    "desc": "",
+    "label": "Tujuan"
+   },
+   {
+    "name": "institusi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Universitas/sekolah asal.",
+    "label": "Institusi"
+   },
+   {
+    "name": "cakupan_institusi",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "cakupan_institusi",
+    "desc": "",
+    "label": "Cakupan institusi"
+   },
+   {
+    "name": "jurusan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Jurusan"
+   },
+   {
+    "name": "peminatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Peminatan"
+   },
+   {
+    "name": "jenjang",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "jenjang_magang",
+    "desc": "",
+    "label": "Jenjang"
+   },
+   {
+    "name": "domisili",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "domisili_magang",
+    "desc": "",
+    "label": "Domisili"
+   },
+   {
+    "name": "status",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "status_magang",
+    "desc": "",
+    "label": "Status"
+   },
+   {
+    "name": "area_kerja",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Area penempatan.",
+    "label": "Area kerja"
+   },
+   {
+    "name": "departemen",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Departemen"
+   },
+   {
+    "name": "bagian",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Bagian"
+   },
+   {
+    "name": "pembimbing",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "PIC/pembimbing di AMMAN.",
+    "label": "Pembimbing"
+   },
+   {
+    "name": "pelatihan_k3",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "Pelatihan K3 yang diikuti.",
+    "label": "Pelatihan K3"
+   },
+   {
+    "name": "nilai_akhir",
+    "typ": "numeric(5,2)",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "0–100.",
+    "label": "Nilai akhir (0–100)"
+   },
+   {
+    "name": "predikat",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": "predikat_magang",
+    "desc": "",
+    "label": "Predikat"
+   },
+   {
+    "name": "nomor_sertifikat",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Nomor sertifikat"
+   },
+   {
+    "name": "email",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Email"
+   },
+   {
+    "name": "telepon",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Telepon"
+   },
+   {
+    "name": "peserta_id",
+    "typ": "text",
+    "pk": false,
+    "fk": "peserta.peserta_id",
+    "req": false,
+    "enum": null,
+    "desc": "Tautan opsional ke master peserta bila orangnya juga penerima manfaat pilar.",
+    "label": "Peserta"
+   },
+   {
+    "name": "catatan",
+    "typ": "text",
+    "pk": false,
+    "fk": null,
+    "req": false,
+    "enum": null,
+    "desc": "",
+    "label": "Catatan"
+   }
+  ],
+  "label": "Peserta Magang"
+ },
  "log_isu_data": {
   "desc": "Temuan kualitas data dari migrasi; dipakai sebagai daftar kerja pembersihan.",
   "grp": "Audit",
