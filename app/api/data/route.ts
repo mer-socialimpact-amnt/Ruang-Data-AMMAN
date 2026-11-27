@@ -48,4 +48,5 @@ function restrictToMitra(all: Record<string, Row[]>, mitraId: string | null) {
   all.log_isu_data = all.log_isu_data.filter((i) => keep.has(i.record_id));
   all.mitra_kontak = all.mitra_kontak.filter((k) => k.mitra_id === mitraId);
   all.lembaga_komunitas = []; all.infrastruktur = []; all.capaian_agregat = [];
+  all.epp_kegiatan = []; all.donasi = []; all.internship = [];
 }
