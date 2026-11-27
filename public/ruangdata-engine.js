@@ -170,7 +170,7 @@ function nextId(t){
   const pk = PK[t][0]; const ids = DB[t].map(r => r[pk]).filter(Boolean);
   const pre = {peserta:'PSR-',enrollment:'ENR-',tracer_ketenagakerjaan:'TRC-',baseline_peserta:'BSL-',usaha:'USH-',usaha_omzet_bulanan:'OMZ-',
     lembaga_komunitas:'LMB-',infrastruktur:'INF-',sertifikasi:'SRT-',pengukuran_kesehatan:'PKS-',kontribusi_lingkungan:'KTR-',peserta_usaha:'PUS-',
-    usaha_legalitas:'LGL-',usaha_pemantauan:'PMU-',rumah_tangga:'RT-',mitra:'MTR-',mitra_kontak:'KTK-',capaian_agregat:'AGR-',log_isu_data:'ISU-'}[t] || (t.slice(0,3).toUpperCase()+'-');
+    usaha_legalitas:'LGL-',usaha_pemantauan:'PMU-',rumah_tangga:'RT-',mitra:'MTR-',mitra_kontak:'KTK-',capaian_agregat:'AGR-',log_isu_data:'ISU-',epp_kegiatan:'EPK-',donasi:'DON-',internship:'MAG-'}[t] || (t.slice(0,3).toUpperCase()+'-');
   let max = 0, width = 5;
   ids.forEach(id => { const m = String(id).match(/(\d+)$/); if (m && String(id).startsWith(pre)) { max = Math.max(max, +m[1]); width = m[1].length; } });
   return pre + String(max+1).padStart(width,'0');
@@ -336,6 +336,9 @@ const ICON = {
   kerangka:'<circle cx="6" cy="5" r="2.2"/><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="12" r="2.2"/><path d="M6 7.2v9.6M8.2 5H12a4 4 0 0 1 4 4v.8M8.2 19H12a4 4 0 0 0 4-4v-.8"/>',
   laporan:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 17v-3M12 17v-6M15 17v-2"/>',
   lintas:'<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',
+  epp:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M9 11h6M12 8v6"/>',
+  donasi:'<rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13M12 8c-1.5-3-5-4-5-1.5S10 8 12 8zm0 0c1.5-3 5-4 5-1.5S14 8 12 8z"/>',
+  internship:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5M22 9v6"/>',
   peserta:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/>',
   keikutsertaan:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/>',
   usaha:'<path d="M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6"/>',
@@ -363,6 +366,10 @@ const ROUTES = [
   {h:'pilar/EE', t:'Economic Empowerment', i:PC.EE},
   {h:'pilar/ST', t:'Sustainable Tourism', i:PC.ST},
   {h:'lintas', t:'Lintas Pilar', i:PC.CP, b:true},
+  {g:'Program'},
+  {h:'epp', t:'Employee Participation Program', i:'#fff', nomitra:true},
+  {h:'donasi', t:'Donation', i:'#fff', nomitra:true},
+  {h:'internship', t:'Internship', i:'#fff', nomitra:true},
   {g:'Data'},
   {h:'peserta', t:'Peserta', i:'#fff'},
   {h:'keikutsertaan', t:'Keikutsertaan Program', i:'#fff'},
@@ -376,7 +383,7 @@ const ROUTES = [
   {h:'pengaturan', t:'Impor / Ekspor', i:'#fff'},
 ];
 function renderNav(cur){
-  $('#nav').innerHTML = ROUTES.filter(r => !r.admin || (typeof AUTH !== 'undefined' && AUTH.user && AUTH.user.role === 'admin')).map(r => r.g ? `<div class="grp">${esc(r.g)}</div>` :
+  $('#nav').innerHTML = ROUTES.filter(r => (!r.admin || (typeof AUTH !== 'undefined' && AUTH.user && AUTH.user.role === 'admin')) && (!r.nomitra || !(typeof AUTH !== 'undefined' && AUTH.user && AUTH.user.role === 'mitra'))).map(r => r.g ? `<div class="grp">${esc(r.g)}</div>` :
     `<a href="#/${r.h}" class="${cur.startsWith(r.h)?'on':''}" title="${esc(r.t)}">${r.h.startsWith('pilar/') ? `<span class="sw" style="background:${r.i}"></span>` : ico(r.h)}${esc(r.t)}</a>`).join('');
   const RL = {admin: 'Admin', editor: 'Editor', viewer: 'Viewer', mitra: 'Mitra'};
   $('#foot').innerHTML = `<span class="who" title="${esc(USER.email)}">${esc(USER.nama || USER.email)}</span>${esc(RL[USER.role] || USER.role)}${USER.mitra_nama ? ' · ' + esc(USER.mitra_nama) : ''} · <a href="/akun/password">Ganti sandi</a> · <a href="/auth/signout">Keluar</a><br><span id="savestate">${esc(SAVE_TXT)}</span>`;
@@ -386,7 +393,7 @@ function route(){
   const h = location.hash.replace(/^#\/?/, '') || 'beranda';
   renderNav(h);
   const [p, a] = h.split('/');
-  const pages = {beranda:pBeranda, kerangka:pKerangka, pilar:()=>pPilar(a), lintas:pLintas, peserta:pPeserta, keikutsertaan:pEnrollment,
+  const pages = {beranda:pBeranda, kerangka:pKerangka, pilar:()=>pPilar(a), lintas:pLintas, epp:pEPP, donasi:pDonasi, internship:pInternship, peserta:pPeserta, keikutsertaan:pEnrollment,
                  usaha:pUsaha, mitra:pMitra, kualitas:pKualitas, laporan:pLaporan, referensi:pReferensi, pengaturan:pPengaturan, pengguna:pPengguna };
   const fn = pages[p] || pBeranda;
   const out = fn();
@@ -476,6 +483,8 @@ function subProgTable(pc, enrs, extra){
   </tbody></table></div>`;
 }
 
+const ORANG_PER_KK = 4; // rata-rata anggota keluarga per penerima manfaat
+const kpiTerdampak = n => kpi('Total orang terdampak', fmt(n * ORANG_PER_KK), `${fmt(n)} penerima unik × ${ORANG_PER_KK} (rata-rata orang per keluarga)`);
 function pPilar(pc){
   const P = PILAR.find(p => p.k === pc) || PILAR[0];
   const enrs = enrFiltered(pc); const d = demo(enrs);
@@ -486,7 +495,7 @@ function pPilar(pc){
       .sort((a,b) => (ENUM.pendidikan||[]).findIndex(x=>x.kode===a[0]) - (ENUM.pendidikan||[]).findIndex(x=>x.kode===b[0])).map(([k,v]) => ({l: lbl('pendidikan',k), v}));
     const st = [...ts.dist].sort((a,b)=>b[1]-a[1]).map(([k,v]) => ({l: lbl('status_pekerjaan',k), v, c: WORK.has(k) ? '#403836' : '#C7BDBA'}));
     const nSrt = enrs.reduce((s,e)=>s+(IX.srtByE.get(e.enrollment_id)||[]).length,0);
-    kp = kpi('Penerima unik', fmt(d.n), `${fmt(enrs.length)} keikutsertaan`) + kpi('Perempuan', pct(d.femShare), `${fmt(d.fem)} orang`) +
+    kp = kpi('Penerima unik', fmt(d.n), `${fmt(enrs.length)} keikutsertaan`) + kpiTerdampak(d.n) + kpi('Perempuan', pct(d.femShare), `${fmt(d.fem)} orang`) +
          kpi('Tingkat bekerja', pct(ts.rate), `${fmt(ts.work)} dari ${fmt(ts.known)} tracer${ts.unver ? ` · ${fmt(ts.unver)} belum terverifikasi` : ''}`) +
          kpi('Rata-rata penghasilan (bekerja)', rpShort(ts.avgInc), 'per bulan, tracer terakhir') +
          kpi('Median perubahan penghasilan', ts.medChg == null ? '–' : (ts.medChg>=0?'+':'') + pct(ts.medChg), `n = ${fmt(ts.nChg)} · baseline aktual/asumsi BPS`) +
@@ -513,7 +522,7 @@ function pPilar(pc){
     const legal = (ENUM.jenis_legalitas||[]).map(j => { const have = us.filter(u => (IX.legByU.get(u.usaha_id)||[]).some(l => l.jenis_legalitas===j.kode && l.dimiliki)).length; return {l:j.label, v: have, txt: `${fmt(have)} (${pct(us.length? have/us.length : null)})`}; });
     const sek = [...countBy(us, u => u.sektor_usaha || null)].sort((a,b)=>b[1]-a[1]).map(([k,v]) => ({l: k ? lbl('sektor_usaha',k) : 'Tidak tercatat', v}));
     const stop = us.filter(u => (IX.pmByU.get(u.usaha_id)||[]).some(p => ['vakum','berhenti'].includes(p.status_usaha))).length;
-    kp = kpi('Penerima unik', fmt(d.n), `${fmt(enrs.length)} keikutsertaan`) + kpi('Perempuan', pct(d.femShare), `${fmt(d.fem)} orang`) +
+    kp = kpi('Penerima unik', fmt(d.n), `${fmt(enrs.length)} keikutsertaan`) + kpiTerdampak(d.n) + kpi('Perempuan', pct(d.femShare), `${fmt(d.fem)} orang`) +
          kpi('Usaha dibina', fmt(us.length), `${fmt(withO.length)} dengan omzet ≥ 2 bulan`) +
          kpi('Median perubahan omzet', med == null ? '–' : (med>=0?'+':'') + pct(med), 'bulan pertama vs terakhir tercatat') +
          kpi('Usaha ber-NIB', pct(us.length ? us.filter(u => (IX.legByU.get(u.usaha_id)||[]).some(l => l.jenis_legalitas==='nib' && l.dimiliki)).length/us.length : null), 'dari usaha dibina') +
@@ -548,12 +557,117 @@ function pLintas(){
     ${genericTable(t, rows, cols)}`};
 }
 
+/* ===================== program non-pilar: EPP, Donation, Internship ===================== */
+const qSel = (key, k, q, opts, ph) => `<select data-q="${key}:${k}"><option value="">${esc(ph)}</option>${opts.map(([v,t]) => `<option value="${esc(v)}" ${String(q[k]||'')===String(v)?'selected':''}>${esc(t)}</option>`).join('')}</select>`;
+const sumOf = (rows, f) => rows.reduce((s, r) => s + (Number(r[f]) || 0), 0);
+const BULAN = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+function fitPage(t, n, per = 50){ if ((STATE.page[t] || 0) * per >= n) STATE.page[t] = 0; }
+function topN(m, n = 10){ return [...m].sort((a, b) => b[1] - a[1]).slice(0, n); }
+
+function pEPP(){
+  const q = STATE.q.epp || {};
+  const all = DB.epp_kegiatan;
+  const years = uniq(all.map(r => (r.tanggal || '').slice(0, 4)).filter(Boolean)).sort();
+  const s = (q.s || '').trim().toLowerCase();
+  const rows = all.filter(r => (!q.th || (r.tanggal || '').startsWith(q.th)) && (!q.dom || r.domain === q.dom) && (!q.ring || r.ring === q.ring) &&
+    (!s || [r.nama_kegiatan, r.inisiator, r.kecamatan, r.kabupaten, r.epp_id].some(v => (v || '').toLowerCase().includes(s))))
+    .sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
+  const vol = sumOf(rows, 'jumlah_relawan'), jam = sumOf(rows, 'jam_relawan'), pm = sumOf(rows, 'penerima_manfaat');
+  const r1 = rows.filter(r => r.ring === 'ring_1').length;
+  const dom = [...countBy(rows, r => r.domain || null)].sort((a, b) => b[1] - a[1]).map(([k, n]) => {
+    const rs = rows.filter(r => (r.domain || null) === k); return {l: k ? lbl('epp_domain', k) : 'Tidak tercatat', v: n, txt: `${fmt(n)} keg. · ${fmt(sumOf(rs, 'penerima_manfaat'))} PM`}; });
+  const months = uniq(rows.map(r => (r.tanggal || '').slice(0, 7)).filter(Boolean)).sort();
+  const mLab = m => BULAN[+m.slice(5, 7) - 1] + (q.th ? '' : ' ' + m.slice(2, 4));
+  const ringSeries = [['ring_1', '#E9F40B'], ['ring_2', '#403836'], ['ring_3', '#C7BDBA']].map(([k, c]) => ({n: lbl('ring', k), c,
+    vals: Object.fromEntries(months.map(m => [mLab(m), rows.filter(r => (r.tanggal || '').startsWith(m) && r.ring === k).length]))}));
+  const ini = topN(countBy(rows, r => r.inisiator || 'Tidak tercatat')).map(([l, v]) => ({l, v}));
+  const ringPm = (ENUM.ring || []).map(e => ({l: e.label, v: sumOf(rows.filter(r => r.ring === e.kode), 'penerima_manfaat'), c: e.kode === 'ring_1' ? '#E9F40B' : '#403836'}));
+  fitPage('epp_kegiatan', rows.length);
+  return {title: 'Employee Participation Program', crumb: 'Kegiatan relawan karyawan (employee volunteering)', html: `
+    <div class="toolbar">${qSel('epp', 'th', q, years.map(y => [y, 'Tahun ' + y]), 'Semua tahun')}${qSel('epp', 'dom', q, (ENUM.epp_domain || []).map(e => [e.kode, e.label]), 'Semua domain')}${qSel('epp', 'ring', q, (ENUM.ring || []).map(e => [e.kode, e.label]), 'Semua ring')}</div>
+    <div class="kpis">${kpi('Kegiatan', fmt(rows.length), `${fmt(months.length)} bulan aktif`) + kpi('Partisipasi relawan', fmt(vol), 'jumlah keterlibatan karyawan, bukan orang unik') +
+      kpi('Jam relawan', fmt(jam), `rata-rata ${fmt(vol ? jam / vol : 0, 1)} jam per relawan`) + kpi('Penerima manfaat', fmt(pm), `median ${fmt(median(rows.map(r => r.penerima_manfaat)))} per kegiatan · dijumlahkan per kegiatan, orang yang sama bisa terhitung berulang`) +
+      kpi('Kegiatan di Ring 1', pct(rows.length ? r1 / rows.length : null), `${fmt(r1)} kegiatan`) + kpi('Domain kegiatan', fmt(uniq(rows.map(r => r.domain).filter(Boolean)).length), 'bidang berbeda')}</div>
+    <div class="grid g2"><div class="card"><h3>Kegiatan per domain</h3><div class="sub">Jumlah kegiatan · penerima manfaat (PM)</div>${hbars(dom)}</div>
+      <div class="card"><h3>Kegiatan per bulan dan ring</h3><div class="sub">Berdasarkan tanggal kegiatan</div>${months.length ? vstack(months.map(mLab), ringSeries) : '<div class="empty">Belum ada data</div>'}</div></div>
+    <div class="grid g2 sect"><div class="card"><h3>Penerima manfaat per ring</h3><div class="sub">Jumlah penerima manfaat langsung</div>${hbars(ringPm)}</div>
+      <div class="card"><h3>Inisiator teratas</h3><div class="sub">Jumlah kegiatan per pengusul</div>${hbars(ini)}</div></div>
+    <div class="card sect"><div class="toolbar" style="margin:0 0 10px">${searchBox('Cari kegiatan, inisiator, atau kecamatan…', q.s || '', 'epp:s')}<span class="sp"></span><span class="count">${fmt(rows.length)} kegiatan</span><button class="btn pri" data-new="epp_kegiatan">${ico('plus')}Kegiatan EPP</button></div>
+      ${genericTable('epp_kegiatan', rows, ['epp_id', 'tanggal', 'nama_kegiatan', 'domain', 'kecamatan', 'ring', 'inisiator', 'jumlah_relawan', 'jam_relawan', 'penerima_manfaat'], {del: true})}</div>`};
+}
+
+function pDonasi(){
+  const q = STATE.q.don || {};
+  const all = DB.donasi;
+  const yOf = r => (r.tanggal_komite || r.tanggal_diterima || '').slice(0, 4);
+  const years = uniq(all.map(yOf).filter(Boolean)).sort();
+  const s = (q.s || '').trim().toLowerCase();
+  const rows = all.filter(r => (!q.th || yOf(r) === q.th) && (!q.dom || r.domain === q.dom) && (!q.ring || r.ring === q.ring) && (!q.st || r.status === q.st) &&
+    (!s || [r.nama_kegiatan, r.deskripsi, r.kode_proyek, r.lokasi, r.diusulkan_oleh, r.donasi_id].some(v => (v || '').toLowerCase().includes(s))))
+    .sort((a, b) => (b.tanggal_komite || '').localeCompare(a.tanggal_komite || '') || (a.donasi_id).localeCompare(b.donasi_id));
+  const ok = rows.filter(r => ['disetujui', 'disalurkan'].includes(r.status));
+  const vOk = sumOf(ok, 'nilai_disetujui'), withProp = ok.filter(r => r.nilai_proposal > 0);
+  const vProp = sumOf(withProp, 'nilai_proposal'), vOkProp = sumOf(withProp, 'nilai_disetujui');
+  const r1 = sumOf(ok.filter(r => r.ring === 'ring_1'), 'nilai_disetujui');
+  const by = (f, labelF) => [...countBy(ok, r => r[f] || null)].map(([k]) => ({l: labelF(k), v: sumOf(ok.filter(r => (r[f] || null) === k), 'nilai_disetujui')})).sort((a, b) => b.v - a.v);
+  const rippm = by('rippm_kode', k => { if (!k) return 'Tidak tercatat'; const r = ok.find(x => x.rippm_kode === k); return k + ' · ' + (r && r.rippm_uraian || ''); });
+  const domv = by('domain', k => k ? lbl('donasi_domain', k) : 'Tidak tercatat');
+  const lok = by('lokasi', k => k || 'Tidak tercatat');
+  const met = by('metode_pembayaran', k => k ? lbl('metode_pembayaran', k) : 'Tidak tercatat');
+  const fv = {fmtV: v => rpShort(v)};
+  fitPage('donasi', rows.length);
+  return {title: 'Donation', crumb: 'Donasi dan hibah sosial melalui komite donasi', html: `
+    <div class="toolbar">${qSel('don', 'th', q, years.map(y => [y, 'Tahun ' + y]), 'Semua tahun')}${qSel('don', 'dom', q, (ENUM.donasi_domain || []).map(e => [e.kode, e.label]), 'Semua domain')}${qSel('don', 'ring', q, (ENUM.ring || []).map(e => [e.kode, e.label]), 'Semua ring')}${qSel('don', 'st', q, (ENUM.status_donasi || []).map(e => [e.kode, e.label]), 'Semua status')}</div>
+    <div class="kpis">${kpi('Proposal', fmt(rows.length), `${fmt(ok.length)} disetujui`) + kpi('Nilai disetujui', rpShort(vOk), 'total proposal disetujui/disalurkan') +
+      kpi('Rata-rata per donasi', rpShort(ok.length ? vOk / ok.length : null), 'nilai disetujui') + kpi('Disetujui vs diajukan', pct(vProp ? vOkProp / vProp : null), `dari ${fmt(withProp.length)} proposal yang mencantumkan nilai`) +
+      kpi('Nilai ke Ring 1', pct(vOk ? r1 / vOk : null), rpShort(r1)) + kpi('Donasi rutin tahunan', fmt(rows.filter(r => r.kegiatan_tahunan).length), 'ditandai kegiatan tahunan')}</div>
+    <div class="grid g2"><div class="card"><h3>Nilai disetujui per kegiatan RIPPM</h3><div class="sub">Kode RIPPM · uraian</div>${hbars(rippm, fv)}</div>
+      <div class="card"><h3>Nilai disetujui per lokasi</h3><div class="sub">Sesuai kolom lokasi pada proposal</div>${hbars(lok, fv)}</div></div>
+    <div class="grid g2 sect"><div class="card"><h3>Nilai disetujui per domain</h3><div class="sub">Bidang donasi</div>${hbars(domv, fv)}</div>
+      <div class="card"><h3>Metode pembayaran</h3><div class="sub">NOI = transfer dana</div>${hbars(met, fv)}</div></div>
+    <div class="card sect"><div class="toolbar" style="margin:0 0 10px">${searchBox('Cari kegiatan, kode proyek, atau pengusul…', q.s || '', 'don:s')}<span class="sp"></span><span class="count">${fmt(rows.length)} proposal</span><button class="btn pri" data-new="donasi">${ico('plus')}Donasi</button></div>
+      ${genericTable('donasi', rows, ['donasi_id', 'kode_proyek', 'tanggal_komite', 'nama_kegiatan', 'lokasi', 'ring', 'domain', 'nilai_proposal', 'nilai_disetujui', 'metode_pembayaran', 'status'], {del: true})}</div>`};
+}
+
+function pInternship(){
+  const q = STATE.q.mag || {};
+  const all = DB.internship;
+  const years = uniq(all.map(r => r.tahun).filter(Boolean)).sort();
+  const s = (q.s || '').trim().toLowerCase();
+  const rows = all.filter(r => (!q.th || String(r.tahun) === q.th) && (!q.jen || r.jenjang === q.jen) && (!q.dom || r.domisili === q.dom) && (!q.st || r.status === q.st) &&
+    (!s || [r.nama, r.institusi, r.jurusan, r.departemen, r.magang_id].some(v => (v || '').toLowerCase().includes(s))))
+    .sort((a, b) => (b.tahun || 0) - (a.tahun || 0) || (b.batch || 0) - (a.batch || 0) || (a.nama || '').localeCompare(b.nama || ''));
+  const persons = new Set(rows.map(r => normNama(r.nama) + '|' + (r.institusi || '').toLowerCase().slice(0, 12)));
+  const fem = rows.filter(r => r.jenis_kelamin === 'perempuan').length, jkKnown = rows.filter(r => r.jenis_kelamin).length;
+  const ksb = rows.filter(r => r.domisili === 'ksb').length;
+  const done = rows.filter(r => r.status === 'selesai').length;
+  const nil = rows.map(r => r.nilai_akhir).filter(v => v != null);
+  const yCols = uniq(rows.map(r => r.tahun).filter(Boolean)).sort().map(String);
+  const domS = [['ksb', '#E9F40B'], ['ntb_non_ksb', '#403836'], ['non_ntb', '#C7BDBA'], ['luar_negeri', '#8C7B75']].map(([k, c]) => ({n: lbl('domisili_magang', k), c,
+    vals: Object.fromEntries(yCols.map(y => [y, rows.filter(r => String(r.tahun) === y && r.domisili === k).length]))}));
+  const jen = (ENUM.jenjang_magang || []).map(e => ({l: e.label, v: rows.filter(r => r.jenjang === e.kode).length})).filter(x => x.v);
+  const area = topN(countBy(rows, r => r.area_kerja || 'Tidak tercatat'), 8).map(([l, v]) => ({l, v}));
+  const inst = topN(countBy(rows, r => r.institusi || 'Tidak tercatat')).map(([l, v]) => ({l, v}));
+  fitPage('internship', rows.length);
+  return {title: 'Internship', crumb: 'Program magang (PKL dan penelitian) di AMMAN', html: `
+    <div class="toolbar">${qSel('mag', 'th', q, years.map(y => [String(y), 'Tahun ' + y]), 'Semua tahun')}${qSel('mag', 'jen', q, (ENUM.jenjang_magang || []).map(e => [e.kode, e.label]), 'Semua jenjang')}${qSel('mag', 'dom', q, (ENUM.domisili_magang || []).map(e => [e.kode, e.label]), 'Semua domisili')}${qSel('mag', 'st', q, (ENUM.status_magang || []).map(e => [e.kode, e.label]), 'Semua status')}</div>
+    <div class="kpis">${kpi('Penempatan magang', fmt(rows.length), `${fmt(persons.size)} orang unik`) + kpi('Perempuan', pct(jkKnown ? fem / jkKnown : null), `${fmt(fem)} penempatan`) +
+      kpi('Berdomisili di KSB', pct(rows.length ? ksb / rows.length : null), `${fmt(ksb)} penempatan`) + kpi('Selesai', fmt(done), `${fmt(rows.filter(r => r.status === 'berjalan').length)} sedang berjalan`) +
+      kpi('Rata-rata nilai akhir', nil.length ? fmt(nil.reduce((a, b) => a + b, 0) / nil.length, 1) : '–', `n = ${fmt(nil.length)}`) + kpi('Sertifikat terbit', fmt(rows.filter(r => r.nomor_sertifikat).length), 'bernomor sertifikat')}</div>
+    <div class="grid g2"><div class="card"><h3>Penempatan per tahun dan domisili</h3><div class="sub">Lokal (KSB) dibandingkan luar daerah</div>${yCols.length ? vstack(yCols, domS) : '<div class="empty">Belum ada data</div>'}</div>
+      <div class="card"><h3>Jenjang pendidikan</h3><div class="sub">Jumlah penempatan</div>${hbars(jen)}</div></div>
+    <div class="grid g2 sect"><div class="card"><h3>Area penempatan</h3><div class="sub">Area kerja di AMMAN</div>${hbars(area)}</div>
+      <div class="card"><h3>Institusi asal teratas</h3><div class="sub">10 universitas/sekolah dengan penempatan terbanyak</div>${hbars(inst)}</div></div>
+    <div class="card sect"><div class="toolbar" style="margin:0 0 10px">${searchBox('Cari nama, institusi, jurusan, atau departemen…', q.s || '', 'mag:s')}<span class="sp"></span><span class="count">${fmt(rows.length)} penempatan</span><button class="btn pri" data-new="internship">${ico('plus')}Peserta magang</button></div>
+      ${genericTable('internship', rows, ['magang_id', 'nama', 'jenis_kelamin', 'institusi', 'jenjang', 'jurusan', 'tahun', 'batch', 'departemen', 'status', 'nilai_akhir'], {del: true})}</div>`};
+}
+
 function genericTable(t, rows, cols, opts={}){
   if (!rows.length) return `<div class="empty">Belum ada data. Gunakan tombol <b>Tambah</b> untuk mengisi.</div>`;
   const C = SCHEMA[t].cols.filter(c => cols.includes(c.name)).sort((a,b)=>cols.indexOf(a.name)-cols.indexOf(b.name));
   const page = STATE.page[t] || 0, per = opts.per || 50; const slice = rows.slice(page*per, page*per+per);
   return `<div class="tbl-wrap"><table><thead><tr>${C.map(c => `<th class="${/int|numeric|small/.test(c.typ)?'num':''}">${esc(c.label)}</th>`).join('')}<th></th></tr></thead><tbody>
-    ${slice.map(r => `<tr>${C.map(c => `<td class="${/int|numeric|small/.test(c.typ)?'num':''}">${cellView(c, r[c.name])}</td>`).join('')}<td><button class="btn sm" data-edit="${t}" data-id="${esc(keyOf(t,r))}">Ubah</button></td></tr>`).join('')}
+    ${slice.map(r => `<tr>${C.map(c => `<td class="${/int|numeric|small/.test(c.typ)?'num':''}">${cellView(c, r[c.name])}</td>`).join('')}<td class="act" style="white-space:nowrap"><button class="btn sm" data-edit="${t}" data-id="${esc(keyOf(t,r))}">Ubah</button>${opts.del ? ` <button class="btn icon" data-delask="${t}" data-id="${esc(keyOf(t,r))}" title="Hapus" aria-label="Hapus">${ico('trash')}</button>` : ''}</td></tr>`).join('')}
   </tbody></table></div>${pager(t, rows.length, per)}`;
 }
 function cellView(c, v){
@@ -565,6 +679,7 @@ function cellView(c, v){
   if (c.fk === 'mitra.mitra_id') return esc((IX.mitra.get(v)||{}).nama_mitra || v);
   if (c.name === 'nik' || c.name === 'no_kk') return `<span class="mask">${esc(maskId(v))}</span>`;
   if (/numeric\(1[46]/.test(c.typ)) return esc(rp(v));
+  if (/^(tahun|batch)/.test(c.name)) return esc(String(v));
   if (/numeric|int/.test(c.typ)) return esc(fmt(v, /numeric\((5|3),/.test(c.typ) ? 2 : 0));
   return esc(v);
 }
@@ -1080,6 +1195,8 @@ function nameOf(tt, r){
   if (tt === 'peserta') return `${r.nama || '(tanpa nama)'} (${r.peserta_id})`;
   if (tt === 'enrollment') return `${r.enrollment_id} · ${progText(r.program_id)}`;
   if (tt === 'usaha') return `${r.nama_usaha || '(tanpa nama)'} (${r.usaha_id})`;
+  if (tt === 'epp_kegiatan' || tt === 'donasi') return `${r.nama_kegiatan || '(tanpa nama)'} (${keyOf(tt, r)})`;
+  if (tt === 'internship') return `${r.nama || '(tanpa nama)'} (${r.magang_id})`;
   if (tt === 'mitra') return r.nama_mitra;
   return r[PK[tt][0]];
 }
@@ -1263,7 +1380,7 @@ function fkOptions(fk, cur){
   if (t === 'ref_program') return PILAR.map(pl => `<optgroup label="${esc(pl.n)}">${DB.ref_program.filter(p=>p.pilar_kode===pl.k).map(p => `<option value="${esc(p.program_id)}" ${cur===p.program_id?'selected':''}>${esc(p.program_id + ' · ' + progText(p.program_id) + (p.ppm_area_kode ? ' [PPM ' + p.ppm_area_kode + ']' : ''))}</option>`).join('')}</optgroup>`).join('');
   if (t === 'ref_wilayah') return ['kabupaten','kecamatan','desa'].map(l => `<optgroup label="${l}">${DB.ref_wilayah.filter(w=>w.level===l).sort((a,b)=>wilText(a.wilayah_id).localeCompare(wilText(b.wilayah_id))).map(w => `<option value="${esc(w.wilayah_id)}" ${cur===w.wilayah_id?'selected':''}>${esc(wilText(w.wilayah_id))}</option>`).join('')}</optgroup>`).join('');
   if (t === 'ref_ppm_area') return DB.ref_ppm_area.map(a => `<option value="${a.ppm_area_kode}" ${String(cur)===String(a.ppm_area_kode)?'selected':''}>${a.ppm_area_kode}. ${esc(a.nama_mapping)}</option>`).join('');
-  const pk = PK[t][0]; const nameCol = {mitra:'nama_mitra', usaha:'nama_usaha', lembaga_komunitas:'nama_lembaga', konversi_program_lama:'nama_program_lama'}[t];
+  const pk = PK[t][0]; const nameCol = {mitra:'nama_mitra', usaha:'nama_usaha', lembaga_komunitas:'nama_lembaga', konversi_program_lama:'nama_program_lama', epp_kegiatan:'nama_kegiatan', donasi:'nama_kegiatan', internship:'nama'}[t];
   return DB[t].map(r => `<option value="${esc(r[pk])}" ${cur===r[pk]?'selected':''}>${esc(r[pk] + (nameCol && r[nameCol] ? ' · ' + r[nameCol] : ''))}</option>`).join('');
 }
 function bigFkList(fk){
